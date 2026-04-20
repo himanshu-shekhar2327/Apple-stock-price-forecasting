@@ -18,6 +18,9 @@ from sklearn.metrics import mean_absolute_percentage_error
 from tensorflow.keras.models import load_model
 
 # ── Page config — must be first streamlit call ────────────
+
+import os
+port = int(os.environ.get("PORT", 8501))
 st.set_page_config(
     page_title   = "AAPL Stock Forecaster",
     page_icon    = "📈",
