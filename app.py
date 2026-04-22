@@ -7,6 +7,7 @@ import os
 os.environ['TF_USE_LEGACY_KERAS'] = '1'   # ← must be FIRST, before any keras/tf import
 
 import streamlit as st
+import seaborn as sns
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
