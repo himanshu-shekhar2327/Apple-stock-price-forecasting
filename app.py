@@ -3,6 +3,9 @@
 #   Foundation + Sidebar + Dashboard
 # ════════════════════════════════════════════════════════
 
+import os
+os.environ['TF_USE_LEGACY_KERAS'] = '1'   # ← must be FIRST, before any keras/tf import
+
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -15,17 +18,13 @@ warnings.filterwarnings('ignore')
 
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from sklearn.metrics import mean_absolute_percentage_error
-from tensorflow.keras.models import load_model
+from keras.models import load_model   # ← use keras directly, not tensorflow.keras
 
-# ── Page config — must be first streamlit call ────────────
-
-import os
-os.environ['TF_USE_LEGACY_KERAS'] = '1' 
 st.set_page_config(
-    page_title   = "AAPL Stock Forecaster",
-    page_icon    = "📈",
-    layout       = "wide",
-    initial_sidebar_state = "expanded"
+    page_title="AAPL Stock Forecaster",
+    page_icon="📈",
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
 # ── Load saved artifacts (cached so they load only once) ──
