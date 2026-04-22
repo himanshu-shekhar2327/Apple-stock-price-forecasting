@@ -3,9 +3,8 @@ streamlit
 pandas
 numpy
 matplotlib
+seaborn
 yfinance
 scikit-learn
-tensorflow==2.21.0
-keras==3.12.1
+tensorflow-cpu==2.18.0
 joblib
-seaborn

@@ -4,14 +4,15 @@
 # ════════════════════════════════════════════════════════
 
 import os
-os.environ['TF_USE_LEGACY_KERAS'] = '1'   # ← must be FIRST, before any keras/tf import
+import os
+os.environ['TF_USE_LEGACY_KERAS'] = '1'
 
 import streamlit as st
-import seaborn as sns
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+import seaborn as sns
 import yfinance as yf
 import joblib
 import warnings
@@ -19,7 +20,7 @@ warnings.filterwarnings('ignore')
 
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from sklearn.metrics import mean_absolute_percentage_error
-from keras.models import load_model   # ← use keras directly, not tensorflow.keras
+from tensorflow.keras.models import load_model
 
 st.set_page_config(
     page_title="AAPL Stock Forecaster",
