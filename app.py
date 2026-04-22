@@ -20,7 +20,7 @@ from tensorflow.keras.models import load_model
 # ── Page config — must be first streamlit call ────────────
 
 import os
-port = int(os.environ.get("PORT", 8501))
+os.environ['TF_USE_LEGACY_KERAS'] = '1' 
 st.set_page_config(
     page_title   = "AAPL Stock Forecaster",
     page_icon    = "📈",
@@ -31,7 +31,7 @@ st.set_page_config(
 # ── Load saved artifacts (cached so they load only once) ──
 @st.cache_resource
 def load_artifacts():
-    model  = load_model('lstm_model.keras')
+    model = load_model('lstm_model.h5')
     scaler = joblib.load('scaler.pkl')
     return model, scaler
 
