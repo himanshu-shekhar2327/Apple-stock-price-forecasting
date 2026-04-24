@@ -4,7 +4,6 @@
 # ════════════════════════════════════════════════════════
 
 import os
-import os
 os.environ['TF_USE_LEGACY_KERAS'] = '1'
 
 import streamlit as st
@@ -59,10 +58,10 @@ with st.sidebar:
     st.divider()
     st.caption("About this app")
     st.info(
-        "Built using LSTM deep learning model trained on "
-        "Apple stock data (2020–2026). "
-        "Models compared: ARIMA · Prophet · LSTM"
-    )
+    "Built using LSTM deep learning model trained on "
+    "Apple stock data (2020–2026). "
+    "Models compared: ARIMA · Prophet · XGBoost · LSTM"
+)
 
 
     # ── Helper: matplotlib style ───────────────────────────────
@@ -76,7 +75,7 @@ def set_style():
 #  PAGE 1 — DASHBOARD
 # ════════════════════════════════════════════════════════
 if page == "Dashboard":
-    st.title("📈 Apple Stock Price Forecasting App")
+    # st.title("📈 Apple Stock Price Forecasting App")
     # st.caption("Time Series Analysis Project")
 
     st.divider()
@@ -152,10 +151,10 @@ if page == "Dashboard":
         st.subheader("Model comparison — RMSE")
 
         results = pd.DataFrame({
-            'Model'  : ['ARIMA(0,1,0)', 'Prophet (tuned)', 'LSTM'],
-            'RMSE'   : [24.71, 27.34, 8.96],
-            'MAE'    : [20.17, 21.14, 6.88],
-            'MAPE'   : ['—', '9.64%', '3.01%']
+            'Model'  : ['ARIMA(0,1,0)', 'Prophet (tuned)', 'XGBoost', 'LSTM'],
+            'RMSE'   : [24.71, 27.34, 18.69, 8.96],
+            'MAE'    : [20.17, 21.14, 11.43, 6.88],
+            'MAPE'   : ['—', '9.64%', '4.42%', '3.01%']
         })
 
         # Highlight LSTM row
@@ -172,7 +171,7 @@ if page == "Dashboard":
 
         # Bar chart of RMSE
         fig2, ax2 = plt.subplots(figsize=(6, 3))
-        colors = ['#ef9a9a', '#ef9a9a', '#66bb6a']
+        colors = ['#ef9a9a', '#ef9a9a', '#ffcc80', '#66bb6a']
         bars = ax2.barh(
             results['Model'], results['RMSE'],
             color=colors, edgecolor='white', height=0.5
@@ -430,13 +429,13 @@ elif page == "Model Comparison":
     st.subheader("Performance metrics")
 
     results = pd.DataFrame({
-        'Model'   : ['ARIMA(0,1,0)', 'Prophet (original)',
-                     'Prophet (tuned)', 'LSTM'],
-        'RMSE'    : [24.71, 28.69, 27.34, 8.96],
-        'MAE'     : [20.17, 22.56, 21.14, 6.88],
-        'MAPE'    : ['—', '10.35%', '9.64%', '3.01%'],
-        'vs ARIMA': ['baseline', '-16.1%', '-10.7%', '+63.7%']
-    })
+    'Model'   : ['ARIMA(0,1,0)', 'Prophet (original)',
+                 'Prophet (tuned)', 'XGBoost', 'LSTM'],
+    'RMSE'    : [24.71, 28.69, 27.34, 18.69, 8.96],
+    'MAE'     : [20.17, 22.56, 21.14, 11.43, 6.88],
+    'MAPE'    : ['—', '10.35%', '9.64%', '4.42%', '3.01%'],
+    'vs ARIMA': ['baseline', '-16.1%', '-10.7%', '+24.3%', '+63.7%']
+})
 
     def highlight_best(row):
         if row['Model'] == 'LSTM':
@@ -459,9 +458,11 @@ elif page == "Model Comparison":
     with col1:
         st.subheader("RMSE comparison")
         fig, ax = plt.subplots(figsize=(6, 4))
-        models = ['ARIMA', 'Prophet\n(orig)', 'Prophet\n(tuned)', 'LSTM']
-        rmse   = [24.71, 28.69, 27.34, 8.96]
-        colors = ['#90caf9', '#ef9a9a', '#ef9a9a', '#66bb6a']
+        models = ['ARIMA', 'Prophet\n(orig)', 'Prophet\n(tuned)',
+          'XGBoost', 'LSTM']
+        rmse   = [24.71, 28.69, 27.34, 18.69, 8.96]
+        mae    = [20.17, 22.56, 21.14, 11.43, 6.88]
+        colors = ['#90caf9', '#ef9a9a', '#ef9a9a', '#ffcc80', '#66bb6a']
         bars   = ax.bar(models, rmse, color=colors,
                         edgecolor='white', width=0.5)
         ax.bar_label(bars, fmt='%.2f', padding=4, fontsize=10)
@@ -474,7 +475,7 @@ elif page == "Model Comparison":
     with col2:
         st.subheader("MAE comparison")
         fig, ax = plt.subplots(figsize=(6, 4))
-        mae    = [20.17, 22.56, 21.14, 6.88]
+        mae = [20.17, 22.56, 21.14, 11.43, 6.88]
         bars   = ax.bar(models, mae, color=colors,
                         edgecolor='white', width=0.5)
         ax.bar_label(bars, fmt='%.2f', padding=4, fontsize=10)
@@ -489,24 +490,30 @@ elif page == "Model Comparison":
     # ── Insight boxes ──────────────────────────────────
     st.subheader("Key insights")
 
-    c1, c2, c3 = st.columns(3)
+    c1, c2, c3, c4 = st.columns(4)
     with c1:
         st.info(
-            "**ARIMA** confirmed the random walk hypothesis. "
-            "Best auto-ARIMA model was (0,1,0) — adding any "
-            "AR or MA terms made it worse."
+            "**ARIMA** confirmed random walk. "
+            "Best model was (0,1,0) — adding any "
+            "AR/MA terms made it worse."
         )
     with c2:
         st.warning(
-            "**Prophet** forecast in the right direction "
-            "(upward trend) but overshot during the mid-2025 "
-            "correction, inflating RMSE above ARIMA."
+            "**Prophet** forecast correct direction "
+            "but overshot during mid-2025 correction, "
+            "inflating RMSE above ARIMA."
         )
     with c3:
+        st.warning(
+            "**XGBoost** beat ARIMA (RMSE 18.69) "
+            "but overfit on training data. "
+            "Needs more features or more data."
+        )
+    with c4:
         st.success(
-            "**LSTM** outperformed both by 63.7%. "
-            "Its 60-day memory window captured momentum "
-            "and trend direction that linear models missed."
+            "**LSTM** outperformed all by 63.7%. "
+            "60-day memory window captured momentum "
+            "linear and tree models missed."
         )
 
 
