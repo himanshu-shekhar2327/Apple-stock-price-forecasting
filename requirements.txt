@@ -8,3 +8,4 @@ yfinance
 scikit-learn
 tensorflow-cpu==2.18.0
 joblib
+mlflow
