@@ -21,6 +21,9 @@ The project is deployed as an interactive Streamlit web application where users 
 
 ![App Screenshot](./Screenshot.png)
 
+## MLflow Experiment Tracking
+
+![MLflow Dashboard](./mlflow_screenshot.png)
 ---
 
 ## Live Demo
@@ -253,6 +256,7 @@ xgboost
 | `tensorflow` / `keras` | LSTM deep learning model |
 | `scikit-learn` | Scaling, evaluation metrics |
 | `streamlit` | Web application deployment |
+| `mlflow` | Experiment tracking & model comparison |
 
 ---
 
